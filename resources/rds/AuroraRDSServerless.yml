@@ -66,10 +66,10 @@ Resources:
   AuroraDBCluster:
     Type: AWS::RDS::DBCluster
     UpdateReplacePolicy: ${self:custom.DBUpdateReplacePolicy.${self:custom.stage}, self:custom.DBUpdateReplacePolicy.default}
-    DeletionPolicy: ${self:custom.deletionPolicy.${self:custom.stage}, self:custom.deletionPolicy.default}
+    DeletionPolicy: ${self:custom.DBDeletionPolicy.${self:custom.stage}, self:custom.DBDeletionPolicy.default}
     Properties:
       DBClusterIdentifier: ${self:custom.DBClusterIdentifier}
-      # DatabaseName: ${self:custom.DatabaseName}
+      DatabaseName: ${self:custom.DatabaseName}
       Engine: aurora-postgresql
       EngineMode: serverless
       EngineVersion: "10.7"
@@ -82,6 +82,7 @@ Resources:
       VpcSecurityGroupIds:
       - !Ref ClusterSecurityGroup  
       ScalingConfiguration:
-        AutoPause: ${self:custom.DBautopause.${self:custom.stage}, self:custom.DBautopause.default}
-        MinCapacity: ${self:custom.MinTableThroughput}
-        MaxCapacity: ${self:custom.MaxTableThroughput}
+        AutoPause: ${self:custom.DBAutoPause.${self:custom.stage}, self:custom.DBAutoPause.default}
+        SecondsUntilAutoPause: ${self:custom.DBSecondsUntilAutoPause.${self:custom.stage}, self:custom.DBSecondsUntilAutoPause.default}
+        MinCapacity: ${self:custom.DBMinCapacity.${self:custom.stage}, self:custom.DBMinCapacity.default}
+        MaxCapacity: ${self:custom.DBMaxCapacity.${self:custom.stage}, self:custom.DBMaxCapacity.default}

@@ -1,23 +1,43 @@
 service: aurora-serverless
 Description: Aurora Serverless Demo
 
-frameworkVersion: '>=1.61.0 <=1.67.0'
+#frameworkVersion: '>=1.61.0 <=1.67.0'
 
 plugins:
   - serverless-python-requirements
-
-
 custom:
   stage: ${opt:stage, self:provider.stage}
   region:
-    prod: us-east-2 # Ohio
-    default: us-west-2 # Oregon
-  deletionPolicy:
-    dev: Delete
-    prod: Retain
+    prod: us-east-1 
+    default: us-east-1 
   logRetention:
     prod: 180
     default: 14
+  DatabaseName: "aurora-demo-db"
+  DBClusterIdentifier: ${self:custom.stage}-${self:service.name}
+  DBUpdateReplacePolicy:
+    dev: Delete
+    prod: Retain
+  DBDeletionPolicy:
+    dev: Delete
+    prod: Retain
+  DBBackupRetentionPeriod:
+    dev:  7
+    prod: 90
+  DBDeletionProtection:
+    dev: false
+    prod: true
+  DBAutoPause:
+    default: true
+  DBSecondsUntilAutoPause:
+    dev: 600
+    prod: 6000
+  DBMinCapacity:
+    dev: 1
+    prod: 1
+  DBMaxCapacity:
+    dev: 1
+    prod: 2
   DBClusterARN:
     Fn::Join:
       - ':'
@@ -35,7 +55,7 @@ provider:
   stackName: ${self:custom.stage}-${self:service.name}
   region: ${self:custom.region.${self:custom.stage}, self:custom.region.default}
   stackTags:
-    APP: Aurora Serverless Demo
+    APP: Aurora Serverless Demo (not using data api)
     STAGE: ${self:custom.stage}
   logs:
     restApi: true
@@ -76,7 +96,7 @@ resources:
   # RDS Aurora Serverless
   - ${file(resources/rds/AuroraRDSServerless.yml)}
   # Log Groups
-  - ${file(resources/loggroups/LogGroups.yml)}
+  - ${file(resources/loggroup/LogGroups.yml)}
   # cfn Custom Resource
   - ${file(resources/custom/DBMigrationTrigger.yml)}
   - ${file(resources/custom/DBMigrationRole.yml)}

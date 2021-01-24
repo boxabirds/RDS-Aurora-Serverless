@@ -1,6 +1,6 @@
 Resources:
-  DBMirgationCustomResource:
-    Type: 'Custom::DBMirgation'
+  DBMigrationCustomResource:
+    Type: 'Custom::DBMigration'
     Version: '0.1'
     DependsOn:
     - DBMigrationLogGroup
